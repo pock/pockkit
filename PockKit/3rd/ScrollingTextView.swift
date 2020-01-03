@@ -27,8 +27,8 @@ open class ScrollingTextView: NSView {
     }
     
     /// Amount of scroll the text should do before stop
-    /// - Values:
-    ///     - 0 = Infinite
+    /// 
+    /// Set `0` for infinite loop
     open var numberOfLoop: Int = 0 {
         didSet {
             updateTraits()

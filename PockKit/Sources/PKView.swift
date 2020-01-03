@@ -8,11 +8,12 @@
 
 import Foundation
 
-/// `PKView` is a tappable `NSView` subclass.
-/// You can override the given methods to create action in response to a user action, like a tap or a swipe.
+/**
+ `PKView` is a tappable `NSView` subclass.
+ */
 open class PKView: NSView {
     
-    /// Core
+    // MARK: Core
     private var initialPosition: NSPoint?
     private var didCallLongPressHandler: Bool = false
     
@@ -24,31 +25,34 @@ open class PKView: NSView {
     /**
     Override this function to define an action for user's tap.
     */
-    open func didTapHandler()        { /***/ }
+    open func didTapHandler() { /**/ }
     
     /**
     Override this function to define an action for user's long press.
     */
-    open func didLongPressHandler() { /***/ }
+    open func didLongPressHandler() { /**/ }
     
     /**
      Override this function to define an action for user's left swipe.
      */
-    open func didSwipeLeftHandler()  { /***/ }
+    open func didSwipeLeftHandler()  { /**/ }
     
     /**
      Override this function to define an action for user's right swipe.
      */
-    open func didSwipeRightHandler() { /***/ }
+    open func didSwipeRightHandler() { /**/ }
+    
     
     // MARK: Private handlers
+    
     @objc private func _didLongPress() {
         self.didCallLongPressHandler = true
         didLongPressHandler()
     }
     
     // MARK: Overrides
-    override open func touchesBegan(with event: NSEvent) {
+    
+    override public func touchesBegan(with event: NSEvent) {
         /// Touches began
         super.touchesBegan(with: event)
         /// Get touch
@@ -63,7 +67,7 @@ open class PKView: NSView {
         }
     }
     
-    override open func touchesEnded(with event: NSEvent) {
+    override public func touchesEnded(with event: NSEvent) {
         /// Cancel long press handler, if needed
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(_didLongPress), object: nil)
         /// Touches ended

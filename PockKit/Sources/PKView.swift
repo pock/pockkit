@@ -8,40 +8,29 @@
 
 import Foundation
 
-/**
- `PKView` is a tappable `NSView` subclass.
- */
+/// `PKView` is a tappable `NSView` subclass.
 open class PKView: NSView {
     
     // MARK: Core
     private var initialPosition: NSPoint?
     private var didCallLongPressHandler: Bool = false
     
-    /**
-    Override this property to define custom long-press delay.
-    */
+    // MARK: Overrideables
+    
+    /// Override this property to define custom long-press delay.
     open var longPressDelay: TimeInterval = 0.5
     
-    /**
-    Override this function to define an action for user's tap.
-    */
+    /// Override this function to define an action for user's tap.
     open func didTapHandler() { /**/ }
     
-    /**
-    Override this function to define an action for user's long press.
-    */
+    /// Override this function to define an action for user's long press.
     open func didLongPressHandler() { /**/ }
     
-    /**
-     Override this function to define an action for user's left swipe.
-     */
+    /// Override this function to define an action for user's left swipe.
     open func didSwipeLeftHandler()  { /**/ }
     
-    /**
-     Override this function to define an action for user's right swipe.
-     */
+    /// Override this function to define an action for user's right swipe.
     open func didSwipeRightHandler() { /**/ }
-    
     
     // MARK: Private handlers
     

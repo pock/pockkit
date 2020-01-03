@@ -2,6 +2,7 @@
 
 import Cocoa
 
+/// © Nicholas Bellucci, ref: https://gist.github.com/NicholasBellucci/b5e9d31c47f335c36aa043f5f39eedb2
 open class ScrollingTextView: NSView {
     
     /// Text to scroll

@@ -41,6 +41,12 @@ open class PKView: NSView {
     
     // MARK: Overrides
     
+    open override var intrinsicContentSize: NSSize {
+        var rect = super.intrinsicContentSize
+        rect.height = 30
+        return rect
+    }
+    
     override public func touchesBegan(with event: NSEvent) {
         /// Touches began
         super.touchesBegan(with: event)

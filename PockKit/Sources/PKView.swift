@@ -41,12 +41,14 @@ open class PKView: NSView {
     
     // MARK: Overrides
     
+    /// The natural size for the receiving view, considering only properties of the view itself.
     open override var intrinsicContentSize: NSSize {
         var rect = super.intrinsicContentSize
         rect.height = 30
         return rect
     }
     
+    /// Informs the receiver that new set of touches has been recognized.
     override public func touchesBegan(with event: NSEvent) {
         /// Touches began
         super.touchesBegan(with: event)
@@ -62,6 +64,7 @@ open class PKView: NSView {
         }
     }
     
+    /// Returns that a set of touches have been removed.
     override public func touchesEnded(with event: NSEvent) {
         /// Cancel long press handler, if needed
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(_didLongPress), object: nil)

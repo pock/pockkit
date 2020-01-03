@@ -9,6 +9,9 @@
 import Foundation
 import SnapKit
 
+/// Pre-configured `PKView` subclass that has an image view, a title label and a subtitle label.
+///
+/// Pock `Now Playing` widget uses a subclass of this type to shows media informatiion.
 open class PKDetailView: PKView {
     
     // MARK: Core
@@ -97,6 +100,14 @@ open class PKDetailView: PKView {
         self.load()
     }
     
+    /// Default initialiser (coder:).
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.frame = NSRect(x: 0, y: 0, width: 0, height: 30)
+        self.leftToRight = true
+        self.load()
+    }
+    
     /// Initialise an istance of `PKDetailView` with given information.
     ///
     /// - parameter frame: The given `NSRect` to use for view's frame.
@@ -108,13 +119,9 @@ open class PKDetailView: PKView {
         self.load()
     }
     
-    public required init?(coder: NSCoder) {
-        fatalError("`init(coder:)` has not been implemented. Use `init(frame:) instead.`")
-    }
-    
     /// Load content subviews.
     ///
-    /// You should never call this function manually since this is automatically called on `init(frame:)`.
+    /// You should never call this function manually since this is automatically called on `init(frame:leftToRight:)`.
     public func load() {
         addSubview(imageView)
         addSubview(titleView)
@@ -189,15 +196,17 @@ open class PKDetailView: PKView {
     /// Set text for `titleView`
     ///
     /// - parameter title: The text to set to `titleView`.
+    /// - parameter speed: The scrolling speed. `0` means 'no-scroll'.
     open func set(title: String?, speed: Double? = nil) {
-        setText(title, speed: speed, in: titleView)
+        setText(title, speed: canScrollTitle ? speed : 0, in: titleView)
     }
     
     /// Set text for `subtitleView`
     ///
     /// - parameter subtitle: The text to set to `subtitleView`.
+    /// - parameter speed: The scrolling speed. `0` means 'no-scroll'.
     open func set(subtitle: String?, speed: Double? = nil) {
-        setText(subtitle, speed: speed, in: subtitleView)
+        setText(subtitle, speed: canScrollSubtitle ? speed : 0, in: subtitleView)
     }
     
     /// Set image for `imageView`

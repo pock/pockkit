@@ -38,25 +38,46 @@ open class PKDetailView: PKView {
     // MARK: UI Elements
     
     /// Icon image view.
-    public var imageView:    NSImageView!
+    public let imageView: NSImageView = {
+        let imageView = NSImageView(frame: .zero)
+        imageView.imageScaling = .scaleProportionallyDown
+        return imageView
+    }()
     
     /// Main scrolling text view.
-    public var titleView:    ScrollingTextView!
+    public let titleView: ScrollingTextView = {
+        let titleView = ScrollingTextView(frame: .zero)
+        titleView.font = NSFont.systemFont(ofSize: 9)
+        return titleView
+    }()
     
     /// Secondary scrolling text view.
-    public var subtitleView: ScrollingTextView!
+    public let subtitleView: ScrollingTextView = {
+        let subtitleView = ScrollingTextView(frame: .zero)
+        subtitleView.font = NSFont.systemFont(ofSize: 9)
+        subtitleView.textColor = NSColor(calibratedRed: 124/255, green: 131/255, blue: 127/255, alpha: 1)
+        return subtitleView
+    }()
     
     // MARK: Variables
     
     /// A boolean value that determines whether the `title` text view should scroll or not.
     ///
     /// Default is `false`
-    public var canScrollTitle: Bool = false
+    public var canScrollTitle: Bool = false {
+        didSet {
+            titleView.speed = canScrollTitle ? 4 : 0
+        }
+    }
     
     /// A boolean value that determines whether the `subtitle` text view should scroll or not.
     ///
     /// Default is `false`
-    public var canScrollSubtitle: Bool = false
+    public var canScrollSubtitle: Bool = false {
+        didSet {
+            subtitleView.speed = canScrollSubtitle ? 4 : 0
+        }
+    }
     
     /// A boolean value that determines whether the icon image view should be hidden or not.
     ///
@@ -71,7 +92,7 @@ open class PKDetailView: PKView {
     
     /// Default initialiser.
     public override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
+        super.init(frame: NSRect(x: frameRect.origin.x, y: frameRect.origin.y, width: frameRect.size.width, height: 30))
         self.leftToRight = true
         self.load()
     }
@@ -80,8 +101,9 @@ open class PKDetailView: PKView {
     ///
     /// - parameter frame: The given `NSRect` to use for view's frame.
     /// - parameter leftToRight: A boolean value that determines whether the subviews layout should be `left to right`.
-    public convenience init(frame: NSRect = .zero, leftToRight: Bool = true) {
-        self.init(frame: frame)
+    public convenience init(frame: NSRect = NSRect(x: 0, y: 0, width: 0, height: 30), leftToRight: Bool = true) {
+        self.init()
+        self.frame = frame
         self.leftToRight = leftToRight
         self.load()
     }
@@ -94,22 +116,9 @@ open class PKDetailView: PKView {
     ///
     /// You should never call this function manually since this is automatically called on `init(frame:)`.
     public func load() {
-        imageView = NSImageView(frame: .zero)
-        imageView.imageScaling = .scaleProportionallyDown
-        
-        titleView = ScrollingTextView(frame: .zero)
-        titleView.font = NSFont.systemFont(ofSize: 9)
-        if !canScrollTitle { titleView.speed = 0 }
-        
-        subtitleView = ScrollingTextView(frame: .zero)
-        subtitleView.font = NSFont.systemFont(ofSize: 9)
-        subtitleView.textColor = NSColor(calibratedRed: 124/255, green: 131/255, blue: 127/255, alpha: 1)
-        if !canScrollSubtitle { subtitleView.speed = 0 }
-        
         addSubview(imageView)
         addSubview(titleView)
         addSubview(subtitleView)
-        
         updateConstraint()
         didLoad()
     }
@@ -180,22 +189,37 @@ open class PKDetailView: PKView {
     /// Set text for `titleView`
     ///
     /// - parameter title: The text to set to `titleView`.
-    open func set(title: String?) {
-        titleView.setup(string: title ?? "")
+    open func set(title: String?, speed: Double? = nil) {
+        setText(title, speed: speed, in: titleView)
     }
     
     /// Set text for `subtitleView`
     ///
     /// - parameter subtitle: The text to set to `subtitleView`.
-    open func set(subtitle: String?) {
-        subtitleView.setup(string: subtitle ?? "")
+    open func set(subtitle: String?, speed: Double? = nil) {
+        setText(subtitle, speed: speed, in: subtitleView)
     }
     
     /// Set image for `imageView`
     ///
     /// - parameter image: The image to set to `imageView`.
     open func set(image: NSImage?) {
-        imageView?.image = image
+        imageView.image = image
+    }
+    
+    private func setText(_ text: String?, speed: Double?, in textView: ScrollingTextView?) {
+        guard let textView = textView else {
+            return
+        }
+        if let text = text {
+            if let speed = speed {
+                textView.speed = speed
+            }else {
+                let width = (text as NSString).size(withAttributes: textView.textFontAttributes).width
+                textView.speed = width > maxWidth ? 4 : 0
+            }
+        }
+        textView.setup(string: text ?? "")
     }
     
 }

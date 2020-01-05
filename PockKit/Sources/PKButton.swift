@@ -50,6 +50,10 @@ public class PKButton: NSButton {
     }
     
     // MARK: Variables
+    
+    /// `CGFloat` value that determines the maximum width the button must occupy.
+    ///
+    /// Set `0` for no limits.
     public private(set) var maxWidth: CGFloat = 0
     
     // MARK: Initialisers

@@ -20,7 +20,7 @@ open class PKDetailView: PKView {
     /// A boolean value that determines whether the `imageView` is animating or not.
     public private(set) var isAnimating: Bool = false
     
-    /// `CGFloat` value that determines the maximum width the view can occupy.
+    /// `CGFloat` value that determines the maximum width the view must occupy.
     ///
     /// Set `0` for no limits.
     public var maxWidth: CGFloat = 0 {

@@ -12,6 +12,8 @@ import AppKit
 /// Pock widget protocol.
 @objc (PKWidget) public protocol PKWidget: class {
     
+    // MARK: Required
+    
     /// Widget's unique identifier.
     var identifier: NSTouchBarItem.Identifier { get }
     
@@ -27,6 +29,8 @@ import AppKit
     
     /// Default widget initialiser.
     init()
+    
+    // MARK: Optional
     
     /// Notifies the widget that its view is about to be added to a view hierarchy.
     @objc optional func viewWillAppear()

@@ -15,9 +15,16 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     // MARK: Variables
     
     /// The main `NSTouchBar` that will be presented.
-    @IBOutlet open var touchBar: NSTouchBar?
+    @IBOutlet open weak var touchBar: NSTouchBar?
     
-    /// The nearest ancestor in the view controller hierarchy that is a navigation controller.
+    /// The main navigation controller.
+    ///
+    /// You should use this navigation controller if you want to push new controllers on Touch Bar from your widget.
+    public weak var mainNavigationController: PKTouchBarNavigationController? {
+        return executeTouchBarHelperMethod("mainNavigationController") as? PKTouchBarNavigationController
+    }
+    
+    /// The nearest ancestor in the controller hierarchy that is a navigation controller.
     public weak var navigationController: PKTouchBarNavigationController?
     
     /// A boolean value that determines whether the controller is visible or not.
@@ -40,10 +47,7 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     /// Reload the `NSNib` associated to this controller.
     open func reloadNib<T: PKTouchBarController>(_ type: T.Type = T.self) {
         Bundle(for: type).loadNibNamed(NSNib.Name(String(describing: type)), owner: self, topLevelObjects: nil)
-        if touchBar == nil {
-            touchBar = NSTouchBar()
-            touchBar?.delegate = self
-        }
+        touchBar?.delegate = self
         self.didLoad()
     }
     
@@ -58,33 +62,42 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     
     // MARK: Private methods
     
-    private func executeNSTouchBarMethod(_ methodName: String, for touchBar: NSTouchBar?) {
+    @discardableResult
+    private func executeTouchBarHelperMethod(_ methodName: String, for touchBar: NSTouchBar? = nil) -> AnyObject? {
         guard let clss = objc_getClass("Pock.TouchBarHelper") as? NSObjectProtocol else {
-            return
+            return nil
         }
         let selector = Selector(methodName)
-        clss.perform(selector, with: touchBar)
+        guard let touchBar = touchBar else {
+            return clss.perform(selector)?.takeUnretainedValue()
+        }
+        return clss.perform(selector, with: touchBar)?.takeRetainedValue()
     }
     
     // MARK: Public methods
     
     /// Dismisses the currently displaying controller.
     open func dismiss() {
-        executeNSTouchBarMethod("dismissFromTop:", for: touchBar)
+        executeTouchBarHelperMethod("dismissFromTop:", for: touchBar)
         self.isVisible = false
     }
     
     /// Minimize the currently displaying controller.
     open func minimize() {
-        executeNSTouchBarMethod("minimizeFromTop:", for: touchBar)
+        executeTouchBarHelperMethod("minimizeFromTop:", for: touchBar)
         self.isVisible = false
     }
     
     /// Presents this controller.
     open func present() {
         self.reloadNib()
-        executeNSTouchBarMethod("presentOnTop:", for: touchBar)
+        executeTouchBarHelperMethod("presentOnTop:", for: touchBar)
         self.isVisible = true
+    }
+    
+    /// Push controller to main navigation controller.
+    open func pushOnMainNavigationController() {
+        self.mainNavigationController?.push(self)
     }
     
 }

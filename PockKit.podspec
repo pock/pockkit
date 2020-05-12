@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PockKit'
-  s.version          = '0.1.3'
+  s.version          = '0.2.0'
   s.summary          = 'Core framework for building Pock widgets'
 
   s.description      = <<-DESC

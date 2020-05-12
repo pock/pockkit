@@ -6,7 +6,7 @@ readme: README.md
 documentation: docs/guides/*.md
 
 module: PockKit
-module_version: 0.1.4
+module_version: 0.2.0
 
 output: docs/public
 theme: apple

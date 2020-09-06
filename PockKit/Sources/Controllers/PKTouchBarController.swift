@@ -79,21 +79,25 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     
     /// Dismisses the currently displaying controller.
     open func dismiss() {
-        executeTouchBarHelperMethod("dismissFromTop:", for: touchBar)
-        self.isVisible = false
+        if let navController = self.navigationController {
+            navController.popLastController()
+        }else {
+            self.isVisible = false
+            executeTouchBarHelperMethod("dismissFromTop:", for: touchBar)
+        }
     }
     
     /// Minimize the currently displaying controller.
     open func minimize() {
-        executeTouchBarHelperMethod("minimizeFromTop:", for: touchBar)
         self.isVisible = false
+        executeTouchBarHelperMethod("minimizeFromTop:", for: touchBar)
     }
     
     /// Presents this controller.
     open func present() {
         self.reloadNib()
-        executeTouchBarHelperMethod("presentOnTop:", for: touchBar)
         self.isVisible = true
+        executeTouchBarHelperMethod("presentOnTop:", for: touchBar)
     }
     
     /// Push controller to main navigation controller.

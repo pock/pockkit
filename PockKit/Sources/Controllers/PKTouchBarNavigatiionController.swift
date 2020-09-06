@@ -48,7 +48,10 @@ public class PKTouchBarNavigationController {
     /// Pops the top controller from the navigation stack and updates the display.
     public func popLastController() {
         var controller = childControllers.popLast()
-        controller?.dismiss()
+        controller?.navigationController = nil
+        if controller?.isVisible == true {
+            controller?.dismiss()
+        }
         controller = nil
     }
     

@@ -71,7 +71,8 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
         guard let touchBar = touchBar else {
             return clss.perform(selector)?.takeUnretainedValue()
         }
-        return clss.perform(selector, with: touchBar)?.takeRetainedValue()
+        clss.perform(selector, with: touchBar)
+        return nil
     }
     
     // MARK: Public methods

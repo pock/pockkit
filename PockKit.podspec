@@ -20,7 +20,7 @@ Documentation will be available soon on https://kit.pock.dev/docs/
   s.social_media_url = 'https://twitter.com/pigigaldi'
 
   s.platform = :osx
-  s.osx.deployment_target = '10.12.2'
+  s.osx.deployment_target = '10.13'
   s.swift_version = '5'
   
   s.frameworks = 'Foundation'

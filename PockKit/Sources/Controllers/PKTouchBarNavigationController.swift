@@ -1,6 +1,6 @@
 //
-//  PockTouchBarNavigationController.swift
-//  Pock
+//  PKTouchBarNavigationController.swift
+//  PockKit
 //
 //  Created by Pierluigi Galdi on 05/05/2019.
 //  Copyright © 2019 Pierluigi Galdi. All rights reserved.

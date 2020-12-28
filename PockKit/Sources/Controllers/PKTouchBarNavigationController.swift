@@ -40,6 +40,7 @@ public class PKTouchBarNavigationController {
     ///
     /// - parameter controller: The controller to push onto the stack.
     public func push(_ controller: PKTouchBarController) {
+		visibleController?.isVisible = false
         childControllers.append(controller)
         controller.navigationController = self
         controller.present()
@@ -53,6 +54,7 @@ public class PKTouchBarNavigationController {
             controller?.dismiss()
         }
         controller = nil
+		visibleController?.isVisible = true
     }
     
     /// Pops all the controllers on the stack except the root controller and updates the display.

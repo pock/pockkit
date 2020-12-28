@@ -18,6 +18,12 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 		return 0
 	}
 	
+	public override var isVisible: Bool {
+		didSet {
+			edgeController?.window?.setIsVisible(isVisible)
+		}
+	}
+	
 	/// The parent view in which Cursor/Dragging Info will be added
 	open var parentView: NSView!
 	

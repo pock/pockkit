@@ -167,7 +167,9 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 		}
 		cursorView = NSImageView(image: cursor.image)
 		cursorView?.frame.size = NSSize(width: 20, height: 20)
+		cursorView?.wantsLayer = true
 		parentView?.addSubview(cursorView!)
+		cursorView?.layer?.zPosition = 999
 		updateCursorLocation(location)
 	}
 	
@@ -192,7 +194,9 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 			return
 		}
 		draggingInfoView = PKDraggingInfoView(filepath: URL(fileURLWithPath: filepath))
+		draggingInfoView?.wantsLayer = true
 		parentView?.addSubview(draggingInfoView!, positioned: .below, relativeTo: cursorView)
+		draggingInfoView?.layer?.zPosition = 998
 		updateDraggingInfoLocation(info.draggingLocation, animated: false)
 	}
 	

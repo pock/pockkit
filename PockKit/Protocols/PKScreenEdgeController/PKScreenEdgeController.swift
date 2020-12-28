@@ -40,8 +40,13 @@
 		window?.animationBehavior    	  = .none
 		window?.hasShadow  				  = false
 		window?.isOpaque   				  = false
+		#if DEBUG
 		window?.backgroundColor 		  = .random
 		window?.alphaValue 				  = 1
+		#else
+		window?.backgroundColor 		  = .clear
+		window?.alphaValue 				  = 1
+		#endif
 		/// Dragging support
 		window?.registerForDraggedTypes([.URL, .fileURL, .filePromise])
 		/// Create controller

@@ -35,7 +35,9 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	
 	/// Default initialiser
 	open override func didLoad() {
-		self.reloadScreenEdgeController()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: { [weak self] in
+			self?.reloadScreenEdgeController()
+		})
 	}
 	
 	open override func dismiss() {

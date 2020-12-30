@@ -7,6 +7,32 @@
 //
 
 @objc public class PKScreenEdgeController: NSWindowController {
+
+	/// ScreenEdgeWindow
+	private class ScreenEdgeWindow: NSWindow {
+		convenience init(color: NSColor?) {
+			self.init(contentRect: .zero, styleMask: .borderless, backing: .buffered, defer: false, screen: NSScreen.main)
+			collectionBehavior   	  = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenAuxiliary]
+			isExcludedFromWindowsMenu = true
+			isReleasedWhenClosed 	  = true
+			ignoresMouseEvents   	  = false
+			hidesOnDeactivate    	  = false
+			canHide 		     	  = false
+			level 				 	  = .mainMenu
+			animationBehavior    	  = .none
+			hasShadow  				  = false
+			isOpaque   				  = false
+			#if DEBUG
+			backgroundColor 		  = color ?? .random
+			alphaValue 				  = 1
+			#else
+			backgroundColor 		  = color ?? .clear
+			alphaValue 				  = 1
+			#endif
+			/// Dragging support
+			registerForDraggedTypes([.URL, .fileURL, .filePromise])
+		}
+	}
 	
 	/// Core
 	private var trackingArea: NSTrackingArea?
@@ -29,32 +55,13 @@
 	/// Private initialiser
 	internal convenience init(mouseDelegate: PKScreenEdgeMouseDelegate?) {
 		/// Create tracking window
-		let window: NSWindow? = NSWindow(contentRect: .zero, styleMask: .borderless, backing: .buffered, defer: false, screen: NSScreen.main)
-		window?.collectionBehavior   	  = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenAuxiliary]
-		window?.isExcludedFromWindowsMenu = true
-		window?.isReleasedWhenClosed 	  = true
-		window?.ignoresMouseEvents   	  = false
-		window?.hidesOnDeactivate    	  = false
-		window?.canHide 		     	  = false
-		window?.level 				 	  = .mainMenu
-		window?.animationBehavior    	  = .none
-		window?.hasShadow  				  = false
-		window?.isOpaque   				  = false
-		#if DEBUG
-		window?.backgroundColor 		  = .random
-		window?.alphaValue 				  = 1
-		#else
-		window?.backgroundColor 		  = .clear
-		window?.alphaValue 				  = 1
-		#endif
-		/// Dragging support
-		window?.registerForDraggedTypes([.URL, .fileURL, .filePromise])
+		let window = ScreenEdgeWindow(color: .systemBlue)
 		/// Create controller
 		self.init(window: window)
 		self.mouseDelegate = mouseDelegate
 		/// Setup window
-		window?.orderFrontRegardless()
-		window?.delegate = self
+		window.orderFrontRegardless()
+		window.delegate = self
 		self.snapToScreenBottomEdge()
 		/// Log
 		NSLog("[ScreenEdgeController]: Setup for: \(object_getClass(mouseDelegate ?? self) ?? Self.self)...")

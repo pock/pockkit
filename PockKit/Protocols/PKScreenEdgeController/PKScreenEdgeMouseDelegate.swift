@@ -9,32 +9,29 @@
 	
 	// MARK: Required
 	
-	/// The size width for the edge window that reflects your widget visible rect
-	var visibleRectWidth: CGFloat { get set }
-	
 	/// Mouse entered at location
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse entered inside edge-window
-	func screenEdgeController(_ controller: PKScreenEdgeController, mouseEnteredAtLocation location: NSPoint)
+	func screenEdgeController(_ controller: PKScreenEdgeController, mouseEnteredAtLocation location: NSPoint, in view: NSView)
 	
 	/// Mouse did move at location
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse moved inside edge-window
-	func screenEdgeController(_ controller: PKScreenEdgeController, mouseMovedAtLocation location: NSPoint)
+	func screenEdgeController(_ controller: PKScreenEdgeController, mouseMovedAtLocation location: NSPoint, in view: NSView)
 	
 	/// Mouse clicked at location
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse clicked inside edge-window
-	func screenEdgeController(_ controller: PKScreenEdgeController, mouseClickAtLocation location: NSPoint)
+	func screenEdgeController(_ controller: PKScreenEdgeController, mouseClickAtLocation location: NSPoint, in view: NSView)
 	
 	/// Mouse exited at location
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location from where the mouse exited the edge-window
-	func screenEdgeController(_ controller: PKScreenEdgeController, mouseExitedAtLocation location: NSPoint)
+	func screenEdgeController(_ controller: PKScreenEdgeController, mouseExitedAtLocation location: NSPoint, in view: NSView)
 	
 	// MARK: Optionals
 	
@@ -45,7 +42,7 @@
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter delta: The scroll delta. Use this information to relayout your elements
 	/// - parameter location: The location where the mouse scrolled inside edge-window
-	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, mouseScrollWithDelta delta: CGFloat, atLocation location: NSPoint)
+	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, mouseScrollWithDelta delta: CGFloat, atLocation location: NSPoint, in view: NSView)
 	
 	/// Dragging entered with info for file at path
 	///
@@ -54,7 +51,7 @@
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingEntered info: NSDraggingInfo, filepath: String) -> NSDragOperation
+	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingEntered info: NSDraggingInfo, filepath: String, in view: NSView) -> NSDragOperation
 	
 	/// Dragging updated with info for file at path
 	///
@@ -63,7 +60,7 @@
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingUpdated info: NSDraggingInfo, filepath: String) -> NSDragOperation
+	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingUpdated info: NSDraggingInfo, filepath: String, in view: NSView) -> NSDragOperation
 	
 	/// Dragging perform operation info for file at path
 	///
@@ -72,7 +69,7 @@
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, performDragOperation info: NSDraggingInfo, filepath: String) -> Bool
+	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, performDragOperation info: NSDraggingInfo, filepath: String, in view: NSView) -> Bool
 	
 	/// Dragging ended with info
 	///
@@ -80,6 +77,6 @@
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
-	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingEnded info: NSDraggingInfo)
+	@objc optional func screenEdgeController(_ controller: PKScreenEdgeController, draggingEnded info: NSDraggingInfo, in view: NSView)
 	
 }

@@ -74,7 +74,7 @@ public class PKTouchBarNavigationController {
     
     /// Minimize the currently displaying navigation controller.
     public func minimize() {
-        childControllers.forEach({ $0.minimize() })
+		childControllers.reversed().forEach({ $0.minimize() })
     }
     
     /// De-minimize the currently displaying navigation controller.

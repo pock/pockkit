@@ -52,7 +52,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	
 	/// Re-create `edgeController` object
 	@objc open func reloadScreenEdgeController() {
-		self.edgeController = PKScreenEdgeController(mouseDelegate: self)
+		self.edgeController = PKScreenEdgeController(mouseDelegate: self, parentView: parentView)
 	}
 	
 	/// The size width for the edge window that reflects your widget visible rect
@@ -69,7 +69,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse entered inside edge-window
-	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseEnteredAtLocation location: NSPoint) {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseEnteredAtLocation location: NSPoint, in view: NSView) {
 		showCursor(.arrow, at: location)
 	}
 	
@@ -77,7 +77,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse moved inside edge-window
-	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseMovedAtLocation location: NSPoint) {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseMovedAtLocation location: NSPoint, in view: NSView) {
 		updateCursorLocation(location)
 	}
 	
@@ -88,7 +88,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter delta: The scroll delta. Use this information to relayout your elements
 	/// - parameter location: The location where the mouse scrolled inside edge-window
-	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseScrollWithDelta delta: CGFloat, atLocation location: NSPoint) {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseScrollWithDelta delta: CGFloat, atLocation location: NSPoint, in view: NSView) {
 		/// nothing to do here
 	}
 	
@@ -96,16 +96,17 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse clicked inside edge-window
-	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseClickAtLocation location: NSPoint) {
-		fatalError("Must be override in subclass")
+	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseClickAtLocation location: NSPoint, in view: NSView) {
+		/// nothing to do here
 	}
 	
 	/// Mouse exited at location
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location from where the mouse exited the edge-window
-	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseExitedAtLocation location: NSPoint) {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseExitedAtLocation location: NSPoint, in view: NSView) {
 		showCursor(nil, at: nil)
+		showDraggingInfo(nil, filepath: nil)
 	}
 	
 	/// Dragging entered with info for file at path
@@ -115,7 +116,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingEntered info: NSDraggingInfo, filepath: String) -> NSDragOperation {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingEntered info: NSDraggingInfo, filepath: String, in view: NSView) -> NSDragOperation {
 		/// nothing to do here
 		showDraggingInfo(info, filepath: filepath)
 		return NSDragOperation()
@@ -128,7 +129,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingUpdated info: NSDraggingInfo, filepath: String) -> NSDragOperation {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingUpdated info: NSDraggingInfo, filepath: String, in view: NSView) -> NSDragOperation {
 		/// nothing to do here
 		updateDraggingInfoLocation(info.draggingLocation)
 		return NSDragOperation()
@@ -141,7 +142,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
 	/// - parameter filepath: The path of the dragged file
-	open func screenEdgeController(_ controller: PKScreenEdgeController, performDragOperation info: NSDraggingInfo, filepath: String) -> Bool {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, performDragOperation info: NSDraggingInfo, filepath: String, in view: NSView) -> Bool {
 		/// nothing to do here
 		return false
 	}
@@ -152,8 +153,9 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	///
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter info: Object containing all information about dragging session
-	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingEnded info: NSDraggingInfo) {
+	open func screenEdgeController(_ controller: PKScreenEdgeController, draggingEnded info: NSDraggingInfo, in view: NSView) {
 		/// nothing to do here
+		showDraggingInfo(nil, filepath: nil)
 	}
 	
 	/// Show cursor view with given cursor type at given location

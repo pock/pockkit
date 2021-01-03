@@ -39,10 +39,11 @@
 	
 	/// Delegates
 	public private(set) weak var mouseDelegate: PKScreenEdgeMouseDelegate?
+	public private(set)      var parentView: NSView!
 	
 	/// Data
 	private var screenBottomEdgeRect: NSRect {
-		return NSRect(x: window?.frame.origin.x ?? 0, y: 0, width: mouseDelegate?.visibleRectWidth ?? 0, height: 10)
+		return NSRect(x: window?.frame.origin.x ?? 0, y: 0, width: parentView.visibleRect.width, height: 10)
 	}
 	
 	/// Deinit
@@ -53,12 +54,13 @@
 	}
 	
 	/// Private initialiser
-	internal convenience init(mouseDelegate: PKScreenEdgeMouseDelegate?) {
+	internal convenience init(mouseDelegate: PKScreenEdgeMouseDelegate?, parentView: NSView) {
 		/// Create tracking window
 		let window = ScreenEdgeWindow(color: .systemBlue)
 		/// Create controller
 		self.init(window: window)
 		self.mouseDelegate = mouseDelegate
+		self.parentView    = parentView
 		/// Setup window
 		window.orderFrontRegardless()
 		window.delegate = self
@@ -102,7 +104,7 @@ extension PKScreenEdgeController: NSWindowDelegate {
 		guard let delegate = mouseDelegate, let point = window?.mouseLocationOutsideOfEventStream else {
 			return
 		}
-		delegate.screenEdgeController(self, mouseEnteredAtLocation: point)
+		delegate.screenEdgeController(self, mouseEnteredAtLocation: point, in: parentView)
 	}
 	
 	/// Did move mouse in edge window
@@ -110,7 +112,7 @@ extension PKScreenEdgeController: NSWindowDelegate {
 		guard let delegate = mouseDelegate, let point = window?.mouseLocationOutsideOfEventStream else {
 			return
 		}
-		delegate.screenEdgeController(self, mouseMovedAtLocation: point)
+		delegate.screenEdgeController(self, mouseMovedAtLocation: point, in: parentView)
 	}
 	
 	/// Did scroll mouse in edge window
@@ -118,7 +120,7 @@ extension PKScreenEdgeController: NSWindowDelegate {
 		guard let delegate = mouseDelegate else {
 			return
 		}
-		delegate.screenEdgeController?(self, mouseScrollWithDelta: event.deltaX, atLocation: event.locationInWindow)
+		delegate.screenEdgeController?(self, mouseScrollWithDelta: event.deltaX, atLocation: event.locationInWindow, in: parentView)
 	}
 	
 	/// Did click in edge window
@@ -126,12 +128,12 @@ extension PKScreenEdgeController: NSWindowDelegate {
 		guard let delegate = mouseDelegate else {
 			return
 		}
-		delegate.screenEdgeController(self, mouseClickAtLocation: event.locationInWindow)
+		delegate.screenEdgeController(self, mouseClickAtLocation: event.locationInWindow, in: parentView)
 	}
 	
 	/// Mouse did exit from edge window
 	override public func mouseExited(with event: NSEvent) {
-		mouseDelegate?.screenEdgeController(self, mouseExitedAtLocation: event.locationInWindow)
+		mouseDelegate?.screenEdgeController(self, mouseExitedAtLocation: event.locationInWindow, in: parentView)
 	}
 
 }
@@ -149,7 +151,7 @@ extension PKScreenEdgeController: NSDraggingDestination {
 			  let path = pasteboard[0] as? String else {
 			return NSDragOperation()
 		}
-		return delegate.screenEdgeController?(self, draggingEntered: sender, filepath: path) ?? NSDragOperation()
+		return delegate.screenEdgeController?(self, draggingEntered: sender, filepath: path, in: parentView) ?? NSDragOperation()
 	}
 	
 	public func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -158,21 +160,21 @@ extension PKScreenEdgeController: NSDraggingDestination {
 			  let path = pasteboard[0] as? String else {
 			return NSDragOperation()
 		}
-		return delegate.screenEdgeController?(self, draggingUpdated: sender, filepath: path) ?? NSDragOperation()
+		return delegate.screenEdgeController?(self, draggingUpdated: sender, filepath: path, in: parentView) ?? NSDragOperation()
 	}
 	
 	public func draggingExited(_ sender: NSDraggingInfo?) {
 		guard let delegate = mouseDelegate, let location = sender?.draggingLocation ?? window?.mouseLocationOutsideOfEventStream else {
 			return
 		}
-		delegate.screenEdgeController(self, mouseExitedAtLocation: location)
+		delegate.screenEdgeController(self, mouseExitedAtLocation: location, in: parentView)
 	}
 	
 	public func draggingEnded(_ sender: NSDraggingInfo) {
 		guard let delegate = mouseDelegate else {
 			return
 		}
-		delegate.screenEdgeController?(self, draggingEnded: sender)
+		delegate.screenEdgeController?(self, draggingEnded: sender, in: parentView)
 	}
 	
 	public func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
@@ -181,7 +183,7 @@ extension PKScreenEdgeController: NSDraggingDestination {
 			  let path = pasteboard[0] as? String else {
 			return false
 		}
-		return delegate.screenEdgeController?(self, performDragOperation: sender, filepath: path) ?? false
+		return delegate.screenEdgeController?(self, performDragOperation: sender, filepath: path, in: parentView) ?? false
 	}
 	
 }

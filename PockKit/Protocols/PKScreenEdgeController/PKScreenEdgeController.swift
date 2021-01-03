@@ -9,9 +9,9 @@
 @objc public class PKScreenEdgeController: NSWindowController {
 
 	/// ScreenEdgeWindow
-	private class ScreenEdgeWindow: NSWindow {
+	private class ScreenEdgeWindow: NSPanel {
 		convenience init(color: NSColor?) {
-			self.init(contentRect: .zero, styleMask: .borderless, backing: .buffered, defer: false, screen: NSScreen.main)
+			self.init(contentRect: .zero, styleMask: .nonactivatingPanel, backing: .buffered, defer: false, screen: NSScreen.main)
 			collectionBehavior   	  = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenAuxiliary]
 			isExcludedFromWindowsMenu = true
 			isReleasedWhenClosed 	  = true
@@ -23,7 +23,7 @@
 			hasShadow  				  = false
 			isOpaque   				  = false
 			#if DEBUG
-			backgroundColor 		  = color ?? .random
+			backgroundColor 		  = .random
 			alphaValue 				  = 1
 			#else
 			backgroundColor 		  = color ?? .clear

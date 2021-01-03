@@ -11,7 +11,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// Current `ScreenEdgeController` instance.
 	///
 	/// Can be re-created at runtime, if needed.
-	public private(set) var edgeController: PKScreenEdgeController?
+	public var edgeController: PKScreenEdgeController?
 	
 	/// The total content size width for the edge window
 	open var totalContentSizeWidth: CGFloat {

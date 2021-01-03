@@ -22,13 +22,13 @@
 			animationBehavior    	  = .none
 			hasShadow  				  = false
 			isOpaque   				  = false
-			#if DEBUG
-			backgroundColor 		  = .random
-			alphaValue 				  = 1
-			#else
 			backgroundColor 		  = color ?? .clear
 			alphaValue 				  = 1
-			#endif
+			/// Setup view
+			contentView?.wantsLayer = true
+			contentView?.layer?.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+			contentView?.layer?.cornerRadius  = 6
+			contentView?.layer?.masksToBounds = true
 			/// Dragging support
 			registerForDraggedTypes([.URL, .fileURL, .filePromise])
 		}
@@ -43,7 +43,7 @@
 	
 	/// Data
 	private var screenBottomEdgeRect: NSRect {
-		return NSRect(x: window?.frame.origin.x ?? 0, y: 0, width: parentView.visibleRect.width, height: 10)
+		return NSRect(x: 0, y: 0, width: parentView.visibleRect.width, height: 10)
 	}
 	
 	/// Deinit
@@ -53,10 +53,10 @@
 		tearDown()
 	}
 	
-	/// Private initialiser
-	internal convenience init(mouseDelegate: PKScreenEdgeMouseDelegate?, parentView: NSView) {
+	/// Initialiser
+	public convenience init(mouseDelegate: PKScreenEdgeMouseDelegate?, parentView: NSView, barColor: NSColor? = nil) {
 		/// Create tracking window
-		let window = ScreenEdgeWindow(color: .systemBlue)
+		let window = ScreenEdgeWindow(color: barColor)
 		/// Create controller
 		self.init(window: window)
 		self.mouseDelegate = mouseDelegate
@@ -64,7 +64,9 @@
 		/// Setup window
 		window.orderFrontRegardless()
 		window.delegate = self
-		self.snapToScreenBottomEdge()
+		window.setFrame(screenBottomEdgeRect, display: true, animate: false)
+		window.centerHorizontally()
+		self.setupTrackingArea()
 		/// Log
 		NSLog("[ScreenEdgeController]: Setup for: \(object_getClass(mouseDelegate ?? self) ?? Self.self)...")
 	}
@@ -80,7 +82,7 @@
 		}
 	}
 	
-	private func snapToScreenBottomEdge() {
+	private func setupTrackingArea() {
 		if let previousTrackingArea = trackingArea {
 			window?.contentView?.removeTrackingArea(previousTrackingArea)
 			trackingArea = nil
@@ -88,9 +90,7 @@
 		guard let window = window else {
 			return
 		}
-		window.setFrame(screenBottomEdgeRect, display: true, animate: false)
-		window.centerHorizontally()
-		trackingArea = NSTrackingArea(rect: window.contentView?.bounds ?? screenBottomEdgeRect, options: [.mouseEnteredAndExited, .mouseMoved, .activeAlways], owner: self, userInfo: nil)
+		trackingArea = NSTrackingArea(rect: screenBottomEdgeRect, options: [.mouseEnteredAndExited, .mouseMoved, .activeAlways], owner: self, userInfo: nil)
 		window.contentView?.addTrackingArea(trackingArea!)
 	}
 	
@@ -151,6 +151,7 @@ extension PKScreenEdgeController: NSDraggingDestination {
 			  let path = pasteboard[0] as? String else {
 			return NSDragOperation()
 		}
+		NSCursor.hide()
 		return delegate.screenEdgeController?(self, draggingEntered: sender, filepath: path, in: parentView) ?? NSDragOperation()
 	}
 	
@@ -164,6 +165,7 @@ extension PKScreenEdgeController: NSDraggingDestination {
 	}
 	
 	public func draggingExited(_ sender: NSDraggingInfo?) {
+		NSCursor.unhide()
 		guard let delegate = mouseDelegate, let location = sender?.draggingLocation ?? window?.mouseLocationOutsideOfEventStream else {
 			return
 		}

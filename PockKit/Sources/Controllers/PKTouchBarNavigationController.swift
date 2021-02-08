@@ -59,8 +59,12 @@ public class PKTouchBarNavigationController {
     
     /// Pops all the controllers on the stack except the root controller and updates the display.
     public func popToRootController() {
-        for _ in 1..<childControllers.count {
-            popLastController()
+        let count = childControllers.count
+        guard count > 1 else {
+            return
+        }
+        for _ in 1..<count {
+            self.popLastController()
         }
     }
     

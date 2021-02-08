@@ -41,9 +41,11 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	}
 	
 	open override func dismiss() {
-		super.dismiss()
-		edgeController?.tearDown(invalidate: true)
-		edgeController = nil
+        showCursor(nil, at: nil)
+        showDraggingInfo(nil, filepath: nil)
+        edgeController?.tearDown(invalidate: true)
+        edgeController = nil
+        super.dismiss()
 	}
 	
 	deinit {

@@ -95,7 +95,9 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     
     /// Presents this controller.
     open func present() {
-        self.reloadNib()
+        if touchBar == nil {
+            self.reloadNib()
+        }
         self.isVisible = true
         executeTouchBarHelperMethod("presentOnTop:", for: touchBar)
     }

@@ -49,8 +49,7 @@
 	/// Deinit
 	deinit {
 		NSLog("[PKScreenEdgeController]: Deinit for delegate: `\(object_getClass(mouseDelegate) ?? Self.self)`")
-		mouseDelegate = nil
-		tearDown()
+		tearDown(invalidate: true)
 	}
 	
 	/// Initialiser
@@ -73,13 +72,13 @@
 	
 	/// Tear down
 	public func tearDown(invalidate: Bool = false) {
-		if let trackingArea = trackingArea {
+        if invalidate {
+            mouseDelegate = nil
+        }
+        if let trackingArea = trackingArea {
 			window?.contentView?.removeTrackingArea(trackingArea)
 		}
 		window?.close()
-		if invalidate {
-			mouseDelegate = nil
-		}
 	}
 	
 	private func setupTrackingArea() {

@@ -10,7 +10,7 @@ import Foundation
 import AppKit
 
 /// Pock widget protocol.
-@objc (PKWidget) public protocol PKWidget: class {
+@objc (PKWidget) public protocol PKWidget: AnyObject {
     
     // MARK: Required
     

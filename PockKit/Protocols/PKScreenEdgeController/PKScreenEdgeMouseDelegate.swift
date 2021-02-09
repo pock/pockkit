@@ -5,7 +5,7 @@
 //  Created by Pierluigi Galdi on 20/11/20.
 //
 
-@objc public protocol PKScreenEdgeMouseDelegate: class {
+@objc public protocol PKScreenEdgeMouseDelegate: AnyObject {
 	
 	// MARK: Required
 	

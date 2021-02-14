@@ -1,3 +1,7 @@
+<p align="center">
+  <img height="200" src="https://pock.dev/assets/img/preview/developers/xcode12_plus_pockkit.png"/>
+</p>
+
 # PockKit
 
 [![Version](https://img.shields.io/cocoapods/v/PockKit.svg?style=flat)](https://cocoapods.org/pods/PockKit)
@@ -6,7 +10,7 @@
 
 ## Installation
 
-PockKit is available through [CocoaPods](https://cocoapods.org). 
+PockKit is available through [CocoaPods](https://cocoapods.org).
 To install it, simply add the following line to your Podfile:
 
 ```ruby
@@ -15,11 +19,7 @@ pod 'PockKit'
 
 ## Documentation
 
-Documentation will be available soon on https://kit.pock.dev/docs/
-
-## Author
-
-pigigaldi, pigi.galdi@gmail.com
+Documentation will be available soon on https://pock.dev/docs/
 
 ## License
 

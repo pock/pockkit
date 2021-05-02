@@ -33,11 +33,19 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 	/// Dragging info view
 	public var draggingInfoView: PKDraggingInfoView?
 	
-	/// Default initialiser
+	
 	open override func didLoad() {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: { [weak self] in
 			self?.reloadScreenEdgeController()
 		})
+	}
+	
+	open override func present() {
+		super.present()
+		guard !isVisible else {
+			return
+		}
+		didLoad()
 	}
 	
 	open override func dismiss() {

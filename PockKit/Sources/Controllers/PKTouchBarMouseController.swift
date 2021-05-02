@@ -48,10 +48,6 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
         super.dismiss()
 	}
 	
-	deinit {
-		NSLog("[PKTouchBarMouseController]: Deinit \(type(of: self))")
-	}
-	
 	/// Re-create `edgeController` object
 	@objc open func reloadScreenEdgeController() {
 		self.edgeController = PKScreenEdgeController(mouseDelegate: self, parentView: parentView)

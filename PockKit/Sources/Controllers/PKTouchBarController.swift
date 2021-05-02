@@ -9,13 +9,10 @@
 import Foundation
 import AppKit
 
-/// A controller that manages a Touch Bar, typically loaded from a nib file.
-open class PKTouchBarController: NSObject, NSTouchBarDelegate {
+/// A controller that manages a Touch Bar.
+open class PKTouchBarController: NSResponder, NSTouchBarDelegate {
     
     // MARK: Variables
-    
-    /// The main `NSTouchBar` that will be presented.
-    @IBOutlet open weak var touchBar: NSTouchBar?
     
     /// The main navigation controller.
     ///
@@ -36,6 +33,15 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     override required public init() {
         super.init()
     }
+	
+	required public init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	/// Deinit
+	deinit {
+		invalidateTouchBar()
+	}
     
     /// Initializes a new controller, loaded from its associated `NSNib`.
     open class func load<T: PKTouchBarController>(_ type: T.Type = T.self) -> T {
@@ -46,9 +52,9 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     
     /// Reload the `NSNib` associated to this controller.
     open func reloadNib<T: PKTouchBarController>(_ type: T.Type = T.self) {
-        Bundle(for: type).loadNibNamed(NSNib.Name(String(describing: type)), owner: self, topLevelObjects: nil)
-        touchBar?.delegate = self
-        self.didLoad()
+		let clssName = String(type)
+        Bundle(for: type).loadNibNamed(NSNib.Name(clssName), owner: self, topLevelObjects: nil)
+		didLoad()
     }
     
     // MARK: Overrideables
@@ -59,12 +65,23 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     open func didLoad() {
         /// override in subclasses.
     }
+	
+	/// Invalidate current `touchBar` property.
+	///
+	/// Override this function to define custom behaviours on `touchBar`'s invalidation.
+	///
+	/// Remember to execute `touchBar = nil` or `super.invalidateTouchBar()` somewhere in your implementation.
+	open func invalidateTouchBar() {
+		touchBar = nil
+	}
     
     // MARK: Private methods
     
     @discardableResult
     private func executeTouchBarHelperMethod(_ methodName: String, for touchBar: NSTouchBar? = nil) -> AnyObject? {
-        guard let clss = objc_getClass("Pock.TouchBarHelper") as? NSObjectProtocol else {
+		let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Pock"
+		let target = name.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "(", with: "_").replacingOccurrences(of: ")", with: "_")
+        guard let clss = objc_getClass("\(target).TouchBarHelper") as? NSObjectProtocol else {
             return nil
         }
         let selector = Selector(methodName)
@@ -79,27 +96,40 @@ open class PKTouchBarController: NSObject, NSTouchBarDelegate {
     
     /// Dismisses the currently displaying controller.
     open func dismiss() {
+		defer {
+			invalidateTouchBar()
+		}
+		guard isVisible else {
+			return
+		}
         if let navController = self.navigationController {
             navController.popLastController()
         }else {
-            self.isVisible = false
+            isVisible = false
             executeTouchBarHelperMethod("dismissFromTop:", for: touchBar)
         }
     }
     
     /// Minimize the currently displaying controller.
     open func minimize() {
-        self.isVisible = false
+		defer {
+			invalidateTouchBar()
+		}
+		guard isVisible else {
+			return
+		}
+		isVisible = false
         executeTouchBarHelperMethod("minimizeFromTop:", for: touchBar)
     }
     
     /// Presents this controller.
     open func present() {
-        if touchBar == nil {
-            self.reloadNib()
-        }
-        self.isVisible = true
+		guard !isVisible else {
+			return
+		}
+        isVisible = true
         executeTouchBarHelperMethod("presentOnTop:", for: touchBar)
+		executeTouchBarHelperMethod("hideCloseButtonIfNeeded")
     }
     
     /// Push controller to main navigation controller.

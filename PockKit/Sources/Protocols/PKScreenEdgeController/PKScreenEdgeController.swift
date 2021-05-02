@@ -48,7 +48,9 @@
 	
 	/// Deinit
 	deinit {
+		#if DEBUG
 		NSLog("[PKScreenEdgeController]: Deinit for delegate: `\(object_getClass(mouseDelegate) ?? Self.self)`")
+		#endif
 		tearDown(invalidate: true)
 	}
 	
@@ -67,7 +69,9 @@
 		window.centerHorizontally()
 		self.setupTrackingArea()
 		/// Log
+		#if DEBUG
 		NSLog("[ScreenEdgeController]: Setup for: \(object_getClass(mouseDelegate ?? self) ?? Self.self)...")
+		#endif
 	}
 	
 	/// Tear down

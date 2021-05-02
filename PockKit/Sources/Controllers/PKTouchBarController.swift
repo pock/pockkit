@@ -9,6 +9,25 @@
 import Foundation
 import AppKit
 
+extension String {
+	/// Memory-safe `String`'s initialiser to extract plain class name from given `AnyClass`.
+	///
+	/// The use of `NSStringFromClass` could lead to some memory-leak issue in certain situation.
+	///
+	/// What this custom initialiser does is executing `NSStringFromClass(_:)` inside an `autoreleasepool` to avoid any possible leakages.
+	init(_ clss: AnyClass) {
+		self.init()
+		autoreleasepool(invoking: {
+			let clssName = NSStringFromClass(clss)
+			if let realClssName = clssName.split(separator: ".").last {
+				self = String(realClssName)
+			} else {
+				self = clssName
+			}
+		})
+	}
+}
+
 /// A controller that manages a Touch Bar.
 open class PKTouchBarController: NSResponder, NSTouchBarDelegate {
     

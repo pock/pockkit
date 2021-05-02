@@ -15,7 +15,7 @@ import AppKit
     // MARK: Required
     
     /// Widget's unique identifier.
-    var identifier: NSTouchBarItem.Identifier { get }
+    static var identifier: String { get }
     
     /// Widget's customization label.
     ///
@@ -31,6 +31,9 @@ import AppKit
     init()
     
     // MARK: Optional
+	
+	/// Widget's image used for customization palette/view.
+	@objc optional var imageForCustomization: NSImage { get }
     
     /// Notifies the widget that its view is about to be added to a view hierarchy.
     @objc optional func viewWillAppear()

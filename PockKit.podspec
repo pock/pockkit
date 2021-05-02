@@ -26,7 +26,7 @@ Documentation will be available soon on https://pock.dev/docs/
   s.framework = 'Foundation'
   s.framework = 'AppKit'
 
-  s.dependency 'SnapKit'
+  s.dependency 'TinyConstraints'
 
   s.exclude_files = ['docs/**/*']
 

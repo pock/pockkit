@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SnapKit
+import TinyConstraints
 
 /// Pre-configured `PKView` subclass that has an image view, a title label and a subtitle label.
 ///
@@ -40,22 +40,28 @@ open class PKDetailView: PKView {
     
     // MARK: UI Elements
     
+	/// Labels container
+	public private(set) var labelsContainer: NSStackView!
+	
+	/// Content container
+	public private(set) var contentContainer: NSStackView!
+	
     /// Icon image view.
-    public let imageView: NSImageView = {
+    public private(set) lazy var imageView: NSImageView! = {
         let imageView = NSImageView(frame: .zero)
         imageView.imageScaling = .scaleProportionallyDown
         return imageView
     }()
     
     /// Main scrolling text view.
-    public let titleView: ScrollingTextView = {
+    public private(set) lazy var titleView: ScrollingTextView! = {
         let titleView = ScrollingTextView(frame: .zero)
         titleView.font = NSFont.systemFont(ofSize: 9)
         return titleView
     }()
     
     /// Secondary scrolling text view.
-    public let subtitleView: ScrollingTextView = {
+    public private(set) lazy var subtitleView: ScrollingTextView! = {
         let subtitleView = ScrollingTextView(frame: .zero)
         subtitleView.font = NSFont.systemFont(ofSize: 9)
         subtitleView.textColor = NSColor(calibratedRed: 124/255, green: 131/255, blue: 127/255, alpha: 1)
@@ -69,7 +75,7 @@ open class PKDetailView: PKView {
     /// Default is `false`
     public var canScrollTitle: Bool = false {
         didSet {
-            titleView.speed = canScrollTitle ? 4 : 0
+            titleView?.speed = canScrollTitle ? 4 : 0
         }
     }
     
@@ -78,7 +84,7 @@ open class PKDetailView: PKView {
     /// Default is `false`
     public var canScrollSubtitle: Bool = false {
         didSet {
-            subtitleView.speed = canScrollSubtitle ? 4 : 0
+            subtitleView?.speed = canScrollSubtitle ? 4 : 0
         }
     }
     
@@ -94,10 +100,11 @@ open class PKDetailView: PKView {
     // MARK: Initialisers
     
     /// Default initialiser.
+	///
+	/// Remember to call `.load()` right after initialization.
     public override init(frame frameRect: NSRect) {
         super.init(frame: NSRect(x: frameRect.origin.x, y: frameRect.origin.y, width: frameRect.size.width, height: 30))
         self.leftToRight = true
-        self.load()
     }
     
     /// Default initialiser (coder:).
@@ -123,9 +130,18 @@ open class PKDetailView: PKView {
     ///
     /// You should never call this function manually since this is automatically called on `init(frame:leftToRight:)`.
     public func load() {
-        addSubview(imageView)
-        addSubview(titleView)
-        addSubview(subtitleView)
+		height(30)
+		labelsContainer = NSStackView(views: [titleView, subtitleView])
+		labelsContainer.orientation = .vertical
+		labelsContainer.distribution = .fillEqually
+		labelsContainer.alignment = .leading
+		labelsContainer.spacing = 2
+		contentContainer = NSStackView(views: leftToRight ? [imageView, labelsContainer] : [labelsContainer, imageView])
+		contentContainer.orientation = .horizontal
+		contentContainer.distribution = .fill
+		contentContainer.alignment = .centerY
+		contentContainer.spacing = 6
+		addSubview(contentContainer)
         updateConstraint()
         didLoad()
     }
@@ -139,56 +155,20 @@ open class PKDetailView: PKView {
     
     /// Override this function to layout subviews as you prefer.
     ///
-    /// `SnapKit` can help you in doing this.
+    /// `TinyConstraints` can help you in doing this.
     open func updateConstraint() {
-        if leftToRight {
-            imageView.snp.remakeConstraints({ maker in
-                maker.width.equalTo(shouldHideIcon ? 0 : 24)
-                maker.top.bottom.equalTo(self)
-                maker.left.equalTo(self)
-            })
-            titleView.snp.remakeConstraints({ maker in
-                if maxWidth > 0 {
-                    maker.width.equalTo(maxWidth).priority(.medium)
-                }
-                maker.height.equalTo(self).dividedBy(2)
-                maker.left.equalTo(imageView.snp.right).offset(4)
-                maker.top.equalTo(self).inset(2)
-                maker.right.equalToSuperview().inset(4)
-            })
-            subtitleView.snp.remakeConstraints({ maker in
-                if maxWidth > 0 {
-                    maker.width.equalTo(maxWidth).priority(.medium)
-                }
-                maker.left.equalTo(titleView)
-                maker.top.equalTo(titleView.snp.bottom).inset(3)
-                maker.right.equalTo(titleView)
-                maker.bottom.greaterThanOrEqualTo(self)
-            })
-        }else {
-            titleView.snp.remakeConstraints({ maker in
-                if maxWidth > 0 {
-                    maker.width.equalTo(maxWidth).priority(.medium)
-                }
-                maker.height.equalTo(self).dividedBy(2)
-                maker.left.equalToSuperview()
-                maker.top.equalTo(self).inset(2)
-            })
-            subtitleView.snp.remakeConstraints({ maker in
-                if maxWidth > 0 {
-                    maker.width.equalTo(maxWidth).priority(.medium)
-                }
-                maker.top.equalTo(titleView.snp.bottom).inset(3)
-                maker.left.equalTo(titleView)
-                maker.bottom.greaterThanOrEqualTo(self)
-            })
-            imageView.snp.remakeConstraints({ maker in
-                maker.width.equalTo(shouldHideIcon ? 0 : 24)
-                maker.top.bottom.equalTo(self)
-                maker.right.equalTo(self)
-                maker.left.equalTo((titleView.frame.width > subtitleView.frame.width ? titleView : subtitleView).snp.right).offset(4)
-            })
-        }
+		if maxWidth > 0 {
+			if let previous = labelsContainer.constraints.first(where: { $0.identifier == "labelsContainer.width" }) {
+				previous.constant = maxWidth
+			} else {
+				let constraint = labelsContainer.width(maxWidth)
+				constraint.identifier = "labelsContainer.width"
+				constraint.isActive = true
+			}
+		}
+		imageView?.width(shouldHideIcon ? 0 : 24)
+		contentContainer?.edgesToSuperview(insets: .top(4) + .bottom(2))
+		contentContainer?.setNeedsDisplay(contentContainer?.bounds ?? .zero)
     }
     
     // MARK: Setters
@@ -213,7 +193,7 @@ open class PKDetailView: PKView {
     ///
     /// - parameter image: The image to set to `imageView`.
     open func set(image: NSImage?) {
-        imageView.image = image
+        imageView?.image = image
     }
     
     private func setText(_ text: String?, speed: Double?, in textView: ScrollingTextView?) {
@@ -238,19 +218,18 @@ extension PKDetailView {
     
     /// Start `imageView`'s bouncing scale animation.
     public func startBounceAnimation() {
-        if !isAnimating {
-            self.loadBounceAnimation()
-        }
+		self.loadBounceAnimation()
     }
     
     /// Stop `imageView`'s bouncing scale animation.
     public func stopBounceAnimation() {
-        self.imageView.layer?.removeAnimation(forKey: PKDetailView.kBounceAnimationKey)
+        self.imageView?.layer?.removeAnimation(forKey: PKDetailView.kBounceAnimationKey)
         self.isAnimating = false
     }
     
     /// Prepare `imageView`'s boucing scale animation.
     private func loadBounceAnimation() {
+		stopBounceAnimation()
         isAnimating                   = true
         
         let bounce                   = CABasicAnimation(keyPath: "transform.scale")
@@ -261,10 +240,10 @@ extension PKDetailView {
         bounce.repeatCount           = Float.infinity
         bounce.timingFunction        = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         
-        let frame = self.imageView.layer?.frame
-        self.imageView.layer?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.imageView.layer?.frame = frame ?? .zero
-        self.imageView.layer?.add(bounce, forKey: PKDetailView.kBounceAnimationKey)
+        let frame = self.imageView?.layer?.frame
+        self.imageView?.layer?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.imageView?.layer?.frame = frame ?? .zero
+        self.imageView?.layer?.add(bounce, forKey: PKDetailView.kBounceAnimationKey)
     }
     
 }

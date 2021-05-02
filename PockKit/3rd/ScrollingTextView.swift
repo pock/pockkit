@@ -51,7 +51,7 @@ open class ScrollingTextView: NSView {
         }
     }
     
-    private var timer: Timer?
+    private weak var timer: Timer?
     private var point = NSPoint(x: 0, y: 0)
     private var timeInterval: TimeInterval?
     
@@ -137,7 +137,9 @@ private extension ScrollingTextView {
         setNeedsDisplay(NSRect(x: 0, y: 0, width: frame.width, height: frame.height))
         if Int(point.x) == 0 {
             let shouldStop = numberOfLoop > 0 && loopCount == numberOfLoop
-            print("Loop count: \(loopCount). Should stop: \(shouldStop)")
+			#if DEBUG
+			NSLog("Loop count: \(loopCount). Should stop: \(shouldStop)")
+			#endif
             if shouldStop {
                 point.x = 0
                 setSpeed(newInterval: 0)

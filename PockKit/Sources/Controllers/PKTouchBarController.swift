@@ -37,7 +37,7 @@ open class PKTouchBarController: NSResponder, NSTouchBarDelegate {
     ///
     /// You should use this navigation controller if you want to push new controllers on Touch Bar from your widget.
     public weak var mainNavigationController: PKTouchBarNavigationController? {
-        return executeTouchBarHelperMethod("mainNavigationController") as? PKTouchBarNavigationController
+		return executeTouchBarHelperMethod("mainNavigationController") as? PKTouchBarNavigationController
     }
     
     /// The nearest ancestor in the controller hierarchy that is a navigation controller.
@@ -118,7 +118,11 @@ open class PKTouchBarController: NSResponder, NSTouchBarDelegate {
         }
         let selector = Selector(methodName)
         guard let touchBar = touchBar else {
-            return clss.perform(selector)?.takeUnretainedValue()
+			if methodName == "hideCloseButtonIfNeeded" {
+				clss.perform(selector)
+				return nil
+			}
+			return clss.perform(selector)?.takeUnretainedValue()
         }
         clss.perform(selector, with: touchBar)
         return nil

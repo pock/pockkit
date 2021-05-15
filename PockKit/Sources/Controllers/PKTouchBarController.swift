@@ -45,7 +45,20 @@ open class PKTouchBarController: NSResponder, NSTouchBarDelegate {
     
     /// A boolean value that determines whether the controller is visible or not.
     public var isVisible: Bool = false
-    
+	
+	/// The `NSTouchBar` object associated with this controller.
+	///
+	/// If no `NSTouchBar` is explicitly set, `PKTouchBarController` will send `-makeTouchBar` to itself to create the default `NSTouchBar`,
+	/// just like `NSResponser` does.
+	@IBOutlet open override var touchBar: NSTouchBar? {
+		get {
+			return super.touchBar
+		}
+		set {
+			super.touchBar = newValue
+		}
+	}
+	
     // MARK: Initialisers
     
     /// Default initialiser

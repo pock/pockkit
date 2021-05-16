@@ -15,7 +15,8 @@ import AppKit
     // MARK: Required
     
     /// Widget's unique identifier.
-    static var identifier: String { get }
+	@available(*, deprecated, message: "This informatin is now retrieved directly from bundle's Info.plist (CFBundleIdentifier)")
+	static var identifier: String { get }
     
     /// Widget's customization label.
     ///

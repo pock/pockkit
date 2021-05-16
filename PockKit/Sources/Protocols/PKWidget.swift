@@ -34,6 +34,9 @@ import AppKit
 	
 	/// Widget's image used for customization palette/view.
 	@objc optional var imageForCustomization: NSImage { get }
+	
+	/// Performs any set-up necessary to prepare the widget for customization palette.
+	@objc optional func prepareForCustomization()
     
     /// Notifies the widget that its view is about to be added to a view hierarchy.
     @objc optional func viewWillAppear()

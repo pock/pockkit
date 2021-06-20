@@ -10,10 +10,10 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
 PockKit is the core framework for building Pock widgets.
-Documentation will be available soon on https://pock.dev/docs/
+Documentation will be available soon on https://pock.app/docs/
                        DESC
 
-  s.homepage         = 'https://pock.dev/docs'
+  s.homepage         = 'https://pock.app/docs'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Pierluigi Galdi' => 'pigi.galdi@gmail.com' }
   s.source           = { :git => 'https://github.com/pock/pockkit.git', :tag => s.version.to_s }

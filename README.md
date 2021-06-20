@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="200" src="https://pock.dev/assets/img/preview/developers/xcode12_plus_pockkit.png"/>
+  <img height="200" src="https://pock.app/_nuxt/img/xcode12_plus_pockkit.677b1d3.png"/>
 </p>
 
 # PockKit
@@ -19,7 +19,7 @@ pod 'PockKit'
 
 ## Documentation
 
-Documentation will be available soon on https://pock.dev/docs/
+Documentation will be available soon on https://pock.app/docs/
 
 ## License
 

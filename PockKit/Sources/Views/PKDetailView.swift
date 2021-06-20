@@ -29,6 +29,9 @@ open class PKDetailView: PKView {
         }
     }
     
+    /// `CGFloat` value that represents the total content width of this view.
+    public private(set) var contentWidth: CGFloat = 0
+    
     /// A boolean value that determines whether the subviews layout should be `left to right` or `right to left`.
     ///
     /// Default is `true`
@@ -157,18 +160,13 @@ open class PKDetailView: PKView {
     ///
     /// `TinyConstraints` can help you in doing this.
     open func updateConstraint() {
-		if maxWidth > 0 {
-			if let previous = labelsContainer.constraints.first(where: { $0.identifier == "labelsContainer.width" }) {
-				previous.constant = maxWidth
-			} else {
-				let constraint = labelsContainer.width(maxWidth)
-				constraint.identifier = "labelsContainer.width"
-				constraint.isActive = true
-			}
-		}
-		imageView?.width(shouldHideIcon ? 0 : 24)
-		contentContainer?.edgesToSuperview(insets: .top(4) + .bottom(2))
-		contentContainer?.setNeedsDisplay(contentContainer?.bounds ?? .zero)
+        let width = maxWidth > 0 ? min(maxWidth, contentWidth) : contentWidth
+        let constraint = contentContainer.constraints.first(where: { $0.identifier == "contentContainer.width" }) ?? contentContainer.width(width)
+        constraint.identifier = "contentContainer.width"
+        constraint.constant = width
+        constraint.isActive = true
+        imageView?.width(shouldHideIcon ? 0 : 24)
+        contentContainer?.edgesToSuperview(insets: .top(4) + .bottom(2))
     }
     
     // MARK: Setters
@@ -201,14 +199,22 @@ open class PKDetailView: PKView {
             return
         }
         if let text = text {
+            let width = (text as NSString).size(withAttributes: textView.textFontAttributes).width
             if let speed = speed {
                 textView.speed = speed
             }else {
-                let width = (text as NSString).size(withAttributes: textView.textFontAttributes).width
-                textView.speed = width > maxWidth ? 4 : 0
+                textView.speed = width > labelsContainer.bounds.width ? 4 : 0
             }
         }
         textView.setup(string: text ?? "")
+        updateContentWidth()
+    }
+    
+    private func updateContentWidth() {
+        let width1 = titleView.text?.size(withAttributes: titleView.textFontAttributes).width ?? 0
+        let width2 = subtitleView.text?.size(withAttributes: subtitleView.textFontAttributes).width ?? 0
+        contentWidth = max(width1, width2) + (shouldHideIcon ? 0 : 24) + contentContainer.spacing
+        updateConstraint()
     }
     
 }

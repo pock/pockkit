@@ -29,8 +29,8 @@ open class ScrollingTextView: NSView {
     
     /// Amount of scroll the text should do before stop
     /// 
-    /// Set `0` for infinite loop
-    open var numberOfLoop: Int = 0 {
+    /// Set `0` for infinite loop. Default is `2`
+    open var numberOfLoop: Int = 2 {
         didSet {
             updateTraits()
         }
@@ -45,7 +45,9 @@ open class ScrollingTextView: NSView {
     }
     
     /// Speed at which the text scrolls. This number is divided by 100.
-    open var speed: Double = 4 {
+    /// Set `0` to disablr scrolling.
+    /// Default is `0`
+    open var speed: Double = 0 {
         didSet {
             updateTraits()
         }

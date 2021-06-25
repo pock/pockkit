@@ -78,7 +78,7 @@ open class PKDetailView: PKView {
     /// Default is `false`
     public var canScrollTitle: Bool = false {
         didSet {
-            titleView?.speed = canScrollTitle ? 4 : 0
+            set(title: titleView.text as String?, speed: titleView.speed)
         }
     }
     
@@ -87,7 +87,7 @@ open class PKDetailView: PKView {
     /// Default is `false`
     public var canScrollSubtitle: Bool = false {
         didSet {
-            subtitleView?.speed = canScrollSubtitle ? 4 : 0
+            set(subtitle: subtitleView.text as String?, speed: subtitleView.speed)
         }
     }
     
@@ -199,11 +199,15 @@ open class PKDetailView: PKView {
             return
         }
         if let text = text {
-            let width = (text as NSString).size(withAttributes: textView.textFontAttributes).width
-            if let speed = speed {
-                textView.speed = speed
-            }else {
-                textView.speed = width > labelsContainer.bounds.width ? 4 : 0
+            if maxWidth > 0 {
+                let hSpace: CGFloat
+                if leftToRight {
+                    hSpace = abs(textView.convert(textView.frame, from: contentContainer).origin.x)
+                } else {
+                    hSpace = contentContainer.spacing + imageView.frame.width
+                }
+                let width = (text as NSString).size(withAttributes: textView.textFontAttributes).width + hSpace
+                textView.speed = width > maxWidth ? (speed ?? 4) : 0
             }
         }
         textView.setup(string: text ?? "")

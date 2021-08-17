@@ -67,7 +67,7 @@ open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDel
 			return parentView.visibleRect.width
 		}
 		set {
-			fatalError("You must override this property in subclass to use custom setter.")
+			fatalError("[PKTouchBarMouseController] You must override this property in subclass to use custom setter.")
 		}
 	}
 	

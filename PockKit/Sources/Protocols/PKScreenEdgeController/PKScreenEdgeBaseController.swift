@@ -47,7 +47,7 @@ open class PKScreenEdgeBaseController: NSObject, PKScreenEdgeMouseDelegate {
 			return parentView.visibleRect.width
 		}
 		set {
-			fatalError("You must override this property in subclass to use custom setter.")
+			fatalError("[PKScreenEdgeBaseController] You must override this property in subclass to use custom setter.")
 		}
 	}
 	
@@ -83,7 +83,7 @@ open class PKScreenEdgeBaseController: NSObject, PKScreenEdgeMouseDelegate {
 	/// - parameter controller: The controller that notified the delegate
 	/// - parameter location: The location where the mouse clicked inside edge-window
 	open func screenEdgeController(_ controller: PKScreenEdgeController, mouseClickAtLocation location: NSPoint, in view: NSView) {
-		fatalError("Must be override in subclass")
+        fatalError("[PKScreenEdgeBaseController] You must override this function in subclass.")
 	}
 	
 	/// Mouse exited at location

@@ -14,4 +14,7 @@ import AppKit
     /// Widget's preference pane nib name.
     static var nibName: NSNib.Name { get }
     
+    /// Resets preferences to default values.
+    func reset()
+    
 }

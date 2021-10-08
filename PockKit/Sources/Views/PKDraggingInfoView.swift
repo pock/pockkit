@@ -6,6 +6,9 @@
 //  Copyright © 2020 Pierluigi Galdi. All rights reserved.
 //
 
+import Foundation
+import AppKit
+
 open class PKDraggingInfoView: NSView {
 	
 	convenience public init(filepath: URL) {

@@ -5,6 +5,9 @@
 //  Created by Pierluigi Galdi on 20/11/20.
 //
 
+import Foundation
+import AppKit
+
 /// A controller that manages a Touch Bar, typically loaded from a nib file, and can handle mouse and dragging events.
 open class PKTouchBarMouseController: PKTouchBarController, PKScreenEdgeMouseDelegate {
 	

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AppKit
 
 /// `PKView` is a tappable `NSView` subclass.
 open class PKView: NSView {

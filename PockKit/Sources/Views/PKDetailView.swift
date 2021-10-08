@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AppKit
 import TinyConstraints
 
 /// Pre-configured `PKView` subclass that has an image view, a title label and a subtitle label.

@@ -5,6 +5,9 @@
 //  Created by Pierluigi Galdi on 20/11/20.
 //
 
+import Foundation
+import AppKit
+
 @objc public protocol PKScreenEdgeMouseDelegate: AnyObject {
 	
 	// MARK: Required

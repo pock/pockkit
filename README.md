@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="200" src="https://pock.app/_nuxt/img/xcode12_plus_pockkit.677b1d3.png"/>
+  <img height="200" src="https://pock.app/_nuxt/img/xcode12_plus_pockkit.68788ac.png"/>
 </p>
 
 # PockKit

@@ -18,9 +18,14 @@ profile
 DerivedData
 *.hmap
 *.ipa
+.swiftpm
+Package.resolved
 
 # Bundler
 .bundle
+
+# Docs
+PockKit/Resources/PockKit.docc/
 
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts

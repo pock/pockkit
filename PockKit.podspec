@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PockKit'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'Core framework for building Pock widgets'
 
   s.description      = <<-DESC
@@ -20,7 +20,7 @@ Documentation will be available soon on https://pock.app/docs/
   s.social_media_url = 'https://twitter.com/pigigaldi'
 
   s.platform = :osx
-  s.osx.deployment_target = '10.13'
+  s.osx.deployment_target = '10.15'
   s.swift_version = '5'
 
   s.framework = 'Foundation'
